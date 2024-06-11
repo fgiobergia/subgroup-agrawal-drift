@@ -6,35 +6,14 @@ from sklearn.metrics import accuracy_score
 import argparse
 from river.drift import binary as drift
 from sklearn.model_selection import ParameterGrid
-import json
-
-
-def to_Xy(ds, n : int = 10_000, drift_info : bool = False):
-    X = []
-    y = []
-    sg_list = []
-    drifted_list = []
-    for vals in ds.take(n, drift_info=drift_info):
-        if drift_info:
-            x_val, y_val, sg, drifted = vals
-        else:
-            x_val, y_val = vals
-        X.append(list(x_val.values()))
-        y.append(y_val)
-        if drift_info:
-            sg_list.append(sg)
-            drifted_list.append(drifted)
-    
-    if drift_info:
-        return np.array(X), np.array(y), np.array(sg_list), np.array(drifted_list)
-    return np.array(X), np.array(y)
+import pickle
+from run import to_Xy
 
 
 if __name__ == "__main__":
 
     argparser = argparse.ArgumentParser()
     argparser.add_argument("--seed", type=int, default=42)
-    argparser.add_argument("--sg-size", type=float, default=0.1)
     argparser.add_argument("--perturbation", type=float, default=0.05)
     args = argparser.parse_args()
 
@@ -43,24 +22,24 @@ if __name__ == "__main__":
 
     models = {
         "DDM": (drift.DDM, {
-            "warm_start": [ 10, 50, 100, 500, 1000, 5000 ],
-            "drift_threshold": [ 0.1, 0.5, 1, 3, 5, 10]
+            "warm_start": 5000,
+            "drift_threshold": 5,
         }),
         "EDDM": (drift.EDDM, {
-            "warm_start": [ 10, 50, 100, 500, 1000, 5000 ],
-            "beta": np.arange(0.0, 1.1, 0.1),
-            "alpha": [1.],
+            "warm_start": 5000,
+            "beta": 1.,
+            "alpha": 1., 
         }),
         "FHDDM": (drift.FHDDM, {
-            "sliding_window_size": [10, 50, 100, 500, 1000, 5000],
-            "confidence_level": [1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1],
+            "sliding_window_size": 100,
+            "confidence_level": 0.1, 
         }),
         "HDDM_A": (drift.HDDM_A, {
-            "drift_confidence": [1e-4, 1e-3, 1e-2, 1e-1],
+            "drift_confidence": 0.001,
         }),
         "HDDM_W": (drift.HDDM_W, {
-            "drift_confidence": [1e-4, 1e-3, 1e-2, 1e-1],
-            "lambda_val": [ 0.01, 0.05, 0.1, 0.5 ],
+            "drift_confidence": 0.1, 
+            "lambda_val": 0.5, 
         })
     }
 
@@ -74,12 +53,13 @@ if __name__ == "__main__":
 
     results = {}
 
-    for model_name, (model_func, params) in models.items():
+    for model_name, (model_func, config) in models.items():
         print(model_name)
 
-        for config in ParameterGrid(params):
+        for sg_size in np.logspace(-2, 0, base=10):
 
-            key = f"{model_name}|{config}"
+            # key = f"{model_name}|{config}|{sg_size}"
+            key = (model_name, sg_size)
             results[key] = {
                 "y_pred": [],
                 "y_true": [],
@@ -118,5 +98,5 @@ if __name__ == "__main__":
                     results[key]["y_true"].append(with_drift)
                     
                     # store json
-                    with open(f"results.json", "w") as f:
-                        json.dump(results, f)
+                    with open(f"results.pkl", "w") as f:
+                        pickle.dump(results, f)
