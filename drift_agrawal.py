@@ -1,8 +1,8 @@
 from river.datasets import synth
 import numpy as np
-class SubgroupDriftAgrawal:
+class SubgroupAgrawalDrift:
 
-    def pick_subgroup(self, target : float, tol : float = 1e-2, max_len : None | int = None):
+    def pick_subgroup(self, target : float, tol : float = 1e-2, n_iter : int = 1_000, max_len : None | int = None):
         # identify a subgroup that has probability approx. the same as target
 
         # known features + range of values (start, stop, "value is in thousands")
@@ -19,7 +19,6 @@ class SubgroupDriftAgrawal:
         }
 
         curr = 1.0 # initial probability (support) -- all instances are in the subgroup
-        n_iter = 1_000 # max number of iterations (a larger value will typically produce a more accurate result)
         taken = {}
 
         features = list(ranges.keys())

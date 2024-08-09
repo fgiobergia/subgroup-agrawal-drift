@@ -1,4 +1,4 @@
-from drift_agrawal import SubgroupDriftAgrawal
+from drift_agrawal import SubgroupAgrawalDrift
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     with tqdm(range(tot_runs)) as bar:
         for run in range(n_runs):
             for with_drift in [True, False]:
-                ds = SubgroupDriftAgrawal(sg_size=sg_size if with_drift else 0.0,
+                ds = SubgroupAgrawalDrift(sg_size=sg_size if with_drift else 0.0,
                                         perturbation=perturbation,
                                         position=train_size + (test_batches // 2) * batch_size,
                                         width = (test_batches // 4) * batch_size)
