@@ -9,14 +9,14 @@
         "alpha": [1]
     },
     "FHDDM": {
-        "sliding_window_size": [ 100 ],
-        "confidence_level": [ 0.1 ]
+        "sliding_window_size": [ 10 ],
+        "confidence_level": [ 1e-6 ]
     },
     "HDDM_A": {
         "drift_confidence": [ 0.001 ]
     },
     "HDDM_W": {
-        "drift_confidence": [ 0.1 ],
-        "lambda_val": [ 0.5 ]
+        "drift_confidence": [ 0.0001 ],
+        "lambda_val": [ 0.05 ]
     }
 }
