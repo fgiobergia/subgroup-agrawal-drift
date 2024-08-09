@@ -1,13 +1,13 @@
 ## Subgroup Agrawal Drift 
 
-This repository contains the code and data for the paper "A Synthetic Benchmark to Explore Limitations of Localized Drift Detections", by Flavio Giobergia, Eliana Pastor, Luca de Alfaro, Elena Baralis. 
+This repository contains the code and data for the paper "_A Synthetic Benchmark to Explore Limitations of Localized Drift Detections_", by Flavio Giobergia, Eliana Pastor, Luca de Alfaro, Elena Baralis. 
 
 ![alt text](image.png)
 
 ### How to use
 The main library requirements are provided in requirements.txt.
 
-A running example is provided in [examples.ipynb](examples.ipynb).
+A running example is provided in [example.ipynb](example.ipynb).
 
 You can use the `SubgroupAgrawalDrift` class from drift_agrawal.py to generate synthetic data with localized drifts. The class has the following parameters:
 
