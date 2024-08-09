@@ -2,7 +2,7 @@ from river.datasets import synth
 import numpy as np
 class SubgroupDriftAgrawal:
 
-    def pick_subgroup(self, target : float, tol : float = 1e-3, max_len : None | int = None):
+    def pick_subgroup(self, target : float, tol : float = 1e-2, max_len : None | int = None):
         # identify a subgroup that has probability approx. the same as target
 
         # known features + range of values (start, stop, "value is in thousands")
@@ -19,7 +19,7 @@ class SubgroupDriftAgrawal:
         }
 
         curr = 1.0 # initial probability (support) -- all instances are in the subgroup
-        n_iter = 500 # max number of iterations (a larger value will typically produce a more accurate result)
+        n_iter = 1_000 # max number of iterations (a larger value will typically produce a more accurate result)
         taken = {}
 
         features = list(ranges.keys())
@@ -56,15 +56,15 @@ class SubgroupDriftAgrawal:
                         taken[feature] = (a, b)
                     
             if abs(curr - target) < tol:
-                return taken # converged (according to tol)
+                return taken, curr # converged (according to tol)
             n_iter -= 1
-        return taken # return the best subgroup found so far
+        return taken, curr # return the best subgroup found so far
 
     def __init__(self, sg_size : int = 0.1, perturbation : float = 0.0, position : int = 5000, width : int = 1000):
         self.ds = synth.Agrawal(perturbation=perturbation)
         self.sg_size = sg_size
         if self.sg_size > 0:
-            self.sg = self.pick_subgroup(sg_size)
+            self.sg, self.sg_size = self.pick_subgroup(sg_size)
         self.t = 0
         self.position = position
         self.width = width
