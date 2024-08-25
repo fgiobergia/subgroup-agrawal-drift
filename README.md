@@ -1,6 +1,6 @@
 ## Subgroup Agrawal Drift 
 
-This repository contains the code and data for the paper "_A Synthetic Benchmark to Explore Limitations of Localized Drift Detections_", by Flavio Giobergia, Eliana Pastor, Luca de Alfaro, Elena Baralis. 
+This repository contains the code and data for the paper "[_A Synthetic Benchmark to Explore Limitations of Localized Drift Detections_](https://aiimlab.org/pdf/events/KDD_2024_Workshop_On_Discovering_Drift_Phenomena_in_Evolving_Landscape_DELTA/A%20Synthetic%20Benchmark%20to%20Explore%20Limitations%20of%20Localized%20Drift%20Detections.pdf)", by Flavio Giobergia, Eliana Pastor, Luca de Alfaro, Elena Baralis. 
 
 The synthetic dataset introduced a drift that affects only a small portion of the entire dataset, as defined by a subgroup (e.g., _age < 30, salary < $30,000_). We show that for small subgroups, drift detection algorithms do not detect a drift, even though the entirety of the subgroup is drifting. This leads to a subpopulation being affected by degraded performance. The plot below shows the accuracy of a classifier, when measure either at the global level (i.e. on the entire dataset) or only on the subgroup that is experiencing drift. Although the overall performance is steady over time, it can be seen that the model perform extremely poorly for the subgroup affected by drift. Drift detectors generally struggle to detect this kind of drift. 
 
